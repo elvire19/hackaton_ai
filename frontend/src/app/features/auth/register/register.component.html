@@ -1,0 +1,105 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Créer un compte</h2>
+    <p class="subtitle">Rejoignez le Hackathon AI et commencez à innover</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-group">
+        <label for="name">Nom et prénoms</label>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="Entrer votre nom et prénoms"
+            [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+          <span *ngIf="registerForm.get('name')?.errors?.['required']">Nom Complet Obligatoire</span>
+          <span *ngIf="registerForm.get('name')?.errors?.['minlength']">Le nom doit contenir au moins 2 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+          <span *ngIf="registerForm.get('email')?.errors?.['required']">Email obligatoire</span>
+          <span *ngIf="registerForm.get('email')?.errors?.['email']">Veuilez entrer un email valide</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Créer un mot de passe"
+            [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+          <span *ngIf="registerForm.get('password')?.errors?.['required']">Mot de passe obligatoire</span>
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Le mt de passe doit contenir au moins 8 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmation Mot de passe</label>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirmer votre mot de passe"
+            [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Veuilez Confirmer votre mot de passe</span>
+          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Les mot de passe de correpondents pas</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Je veux joindre comme</label>
+        <div class="input-group">
+          <i class="fas fa-user-tag"></i>
+          <select id="role" formControlName="role">
+            <option value="participant">Participant</option>
+            <option value="mentor">Mentor</option>
+            <option value="jury">Membre de jury</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid || loading" class="register-button">
+        <span *ngIf="!loading">Créer</span>
+        <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+      </button>
+
+      <div class="error-alert" *ngIf="error">
+        {{ error }}
+      </div>
+    </form>
+
+    <div class="login-link">
+      Vous avez deja un compte? <a routerLink="/auth/login">Se Connecter</a>
+    </div>
+  </div>
+</div>

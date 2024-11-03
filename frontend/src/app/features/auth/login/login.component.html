@@ -1,0 +1,88 @@
+<div class="login-container">
+  <div class="login-content">
+    <!-- Login Card -->
+    <div class="login-card">
+      <h2>Bienvenue</h2>
+      <p class="subtitle">Connectez vous pour continuer sur Hackathon AI</p>
+
+      <!-- Success Message -->
+      <div class="success-alert" *ngIf="registrationSuccess">
+        <i class="fas fa-check-circle"></i>
+        Création de compte Réussi! Veuilez vous connecter avec vos identifiants.
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            />
+          </div>
+          <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email est obligatoire</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Veuiller entrer un email valide</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de Passe</label>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              placeholder="Entrer votre mot de passe"
+              [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            />
+          </div>
+          <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Mot de passe obligatoire
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid || loading" class="login-button">
+          <span *ngIf="!loading">Connexion</span>
+          <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+        </button>
+
+        <div class="error-alert" *ngIf="error">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ error }}
+        </div>
+      </form>
+    </div>
+
+    <!-- Register Card -->
+    <div class="register-card">
+      <h3>Nouveau sur Hackathon AI?</h3>
+      <p>Rejoignez notre communauté d'innovateurs et participez à des hackathons passionnants!</p>
+      
+      <div class="features">
+        <div class="feature">
+          <i class="fas fa-users"></i>
+          <span>Connectez-vous avec des développeurs talentueux</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-lightbulb"></i>
+          <span>Présentez vos idées innovantes</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-trophy"></i>
+          <span>Gagnez des prix passionnants</span>
+        </div>
+      </div>
+
+      <a routerLink="/auth/register" class="register-button">
+        Créer un compte
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div>

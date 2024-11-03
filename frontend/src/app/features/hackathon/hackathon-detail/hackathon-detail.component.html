@@ -1,0 +1,198 @@
+<div class="hackathon-detail">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Chargement...</span>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ error }}</p>
+      <button (click)="loadHackathon(hackathon?.id!)" class="retry-button">
+        <i class="fas fa-redo"></i>
+        Réessayer
+      </button>
+    </div>
+  
+    <!-- Hackathon Details -->
+    <ng-container *ngIf="!loading && !error && hackathon">
+      <!-- Header -->
+      <div class="header">
+        <div class="title-section">
+          <div class="status-badge" [class]="'status-' + hackathon.status">
+            {{ hackathon.status }}
+          </div>
+          <h1>{{ hackathon.name }}</h1>
+          <p class="description">{{ hackathon.description }}</p>
+        </div>
+  
+        <div class="actions">
+          <button *ngIf="canEdit()" [routerLink]="['edit']" class="edit-button">
+            <i class="fas fa-edit"></i>
+            Modifier
+          </button>
+          <button *ngIf="hackathon.status !== 'draft'" (click)="exportData()" class="export-button">
+            <i class="fas fa-download"></i>
+            Exporter les données (csv)
+          </button>
+        </div>
+      </div>
+  
+      <!-- Quick Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-users"></i>
+          <div class="stat-content">
+            <span class="value">{{ hackathon.statistics.participantCount }}</span>
+            <span class="label">Participants</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-people-group"></i>
+          <div class="stat-content">
+            <span class="value">{{ hackathon.statistics.teamCount }}</span>
+            <span class="label">Equipes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-laptop-code"></i>
+          <div class="stat-content">
+            <span class="value">{{ hackathon.statistics.projectCount }}</span>
+            <span class="label">Projects</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <div class="stat-content">
+            <span class="value">{{ hackathon.statistics.mentoringSessions.total }}</span>
+            <span class="label">Sessions de Mentoring</span>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Main Content -->
+      <div class="content-grid">
+        <!-- Date & Team Info -->
+        <div class="info-card">
+          <h2>Informations su l'évenement</h2>
+          <div class="info-content">
+            <div class="info-item">
+              <i class="fas fa-calendar-alt"></i>
+              <div>
+                <h3>Durée</h3>
+                <p>{{ hackathon.startDate | date:'mediumDate' }} - {{ hackathon.endDate | date:'mediumDate' }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-users-gear"></i>
+              <div>
+                <h3>Taille de chaque équipe</h3>
+                <p>{{ hackathon.maxTeamSize }} Maximun de membre par équipe</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Partners -->
+        <div class="info-card">
+          <h2>Partenaires</h2>
+          <div class="partners-grid" *ngIf="hackathon.partners?.length; else noPartners">
+            <div class="partner-card" *ngFor="let partner of hackathon.partners">
+              <img [src]="partner.logo" [alt]="partner.name" class="partner-logo" *ngIf="partner.logo">
+              <h3>{{ partner.name }}</h3>
+              <a [href]="partner.website" target="_blank" rel="noopener noreferrer" class="partner-link">
+                Visiter le site Web
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          <ng-template #noPartners>
+            <p class="no-data">Aucun Partenaire pour cet hackathon</p>
+          </ng-template>
+        </div>
+  
+        <!-- Evaluation Criteria -->
+        <div class="info-card">
+          <h2>Critère d'évaluation</h2>
+          <div class="criteria-grid">
+            <div class="criteria-item">
+              <div class="criteria-header">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Innovation</h3>
+              </div>
+              <div class="criteria-weight">
+                {{ hackathon.evaluationCriteria.innovation.weight * 100 }}%
+              </div>
+            </div>
+            <div class="criteria-item">
+              <div class="criteria-header">
+                <i class="fas fa-bullseye"></i>
+                <h3>Impact</h3>
+              </div>
+              <div class="criteria-weight">
+                {{ hackathon.evaluationCriteria.impact.weight * 100 }}%
+              </div>
+            </div>
+            <div class="criteria-item">
+              <div class="criteria-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>Fiasabilité</h3>
+              </div>
+              <div class="criteria-weight">
+                {{ hackathon.evaluationCriteria.feasibility.weight * 100 }}%
+              </div>
+            </div>
+            <div class="criteria-item">
+              <div class="criteria-header">
+                <i class="fas fa-presentation"></i>
+                <h3>Présentation</h3>
+              </div>
+              <div class="criteria-weight">
+                {{ hackathon.evaluationCriteria.presentation.weight * 100 }}%
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Mentoring Stats -->
+        <div class="info-card">
+          <h2>Sessions de Mentoring</h2>
+          <div class="mentoring-stats">
+            <div class="mentoring-stat">
+              <div class="stat-label">Programmées</div>
+              <div class="stat-value">{{ hackathon.statistics.mentoringSessions.scheduled }}</div>
+            </div>
+            <div class="mentoring-stat">
+              <div class="stat-label">Terminées</div>
+              <div class="stat-value">{{ hackathon.statistics.mentoringSessions.completed }}</div>
+            </div>
+            <div class="mentoring-stat">
+              <div class="stat-label">Annulées</div>
+              <div class="stat-value">{{ hackathon.statistics.mentoringSessions.cancelled }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Navigation Tabs -->
+      <div class="navigation-tabs">
+        <a [routerLink]="['projects']" routerLinkActive="active" class="tab">
+          <i class="fas fa-laptop-code"></i>
+          Projects
+        </a>
+        <a [routerLink]="['teams']" routerLinkActive="active" class="tab">
+          <i class="fas fa-people-group"></i>
+          Equipes
+        </a>
+        <a [routerLink]="['mentoring']" routerLinkActive="active" class="tab">
+          <i class="fas fa-chalkboard-teacher"></i>
+          Mentoring
+        </a>
+        <a [routerLink]="['jury']" routerLinkActive="active" class="tab" *ngIf="authService.hasRole(['admin', 'organizer', 'jury'])">
+          <i class="fas fa-gavel"></i>
+          Jury
+        </a>
+      </div>
+    </ng-container>
+  </div>

@@ -1,0 +1,288 @@
+<!-- Update the form validation in the template -->
+<div class="hackathon-form-container">
+    <h2>{{ isEditMode ? 'Editer' : 'Créer' }} Hackathon</h2>
+    <p class="subtitle">{{ isEditMode ? 'Editer les details de votre hackathon' : 'Créer un nouvel événement hackathon' }}</p>
+  <!-- Success Message -->
+  <div class="success-alert" *ngIf="success">
+    <i class="fas fa-check-circle"></i>
+    {{ success }}
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-alert" *ngIf="error">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+  </div>
+    <form [formGroup]="hackathonForm" (ngSubmit)="onSubmit()" class="hackathon-form">
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h3>Informations</h3>
+        
+        <div class="form-group">
+          <label for="name">Nom</label>
+          <div class="input-group">
+            <i class="fas fa-trophy"></i>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Entrer le nom de l'hackathon"
+              [class.error]="isFieldInvalid('name')"
+            />
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('name')">
+            {{ getErrorMessage(hackathonForm.get('name'), 'Name') }}
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="description">Description</label>
+          <div class="input-group">
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Entrer la description"
+              rows="4"
+              [class.error]="isFieldInvalid('description')"
+            ></textarea>
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('description')">
+            {{ getErrorMessage(hackathonForm.get('description'), 'Description') }}
+          </div>
+        </div>
+      </div>
+  
+      <!-- Dates and Team Size -->
+      <div class="form-section">
+        <h3>Details sur l'évenement</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startDate">Date début</label>
+            <div class="input-group">
+              <i class="fas fa-calendar-alt"></i>
+              <input
+                type="date"
+                id="startDate"
+                formControlName="startDate"
+                [class.error]="isFieldInvalid('startDate')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isFieldInvalid('startDate')">
+              {{ getErrorMessage(hackathonForm.get('startDate'), 'Start date') }}
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="endDate">Date fin</label>
+            <div class="input-group">
+              <i class="fas fa-calendar-check"></i>
+              <input
+                type="date"
+                id="endDate"
+                formControlName="endDate"
+                [class.error]="isFieldInvalid('endDate')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isFieldInvalid('endDate')">
+              {{ getErrorMessage(hackathonForm.get('endDate'), 'End date') }}
+            </div>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="hackathonForm.errors?.['dateRange']">
+          La date de fin doit etre après la date de début.
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="maxTeamSize">Taille Maximum par équipe</label>
+            <div class="input-group">
+              <i class="fas fa-users"></i>
+              <input
+                type="number"
+                id="maxTeamSize"
+                formControlName="maxTeamSize"
+                min="2"
+                max="10"
+                [class.error]="isFieldInvalid('maxTeamSize')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isFieldInvalid('maxTeamSize')">
+              {{ getErrorMessage(hackathonForm.get('maxTeamSize'), 'Team size') }}
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="status">Statut</label>
+            <div class="input-group">
+              <i class="fas fa-flag"></i>
+              <select id="status" formControlName="status">
+                <option value="draft">Draft</option>
+                <option value="active">Active</option>
+                <option value="completed">Terminé</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Partners Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Partenaires</h3>
+          <button type="button" class="add-button" (click)="addPartner()">
+            <i class="fas fa-plus"></i>
+            Ajouter
+          </button>
+        </div>
+  
+        <div formArrayName="partners" class="partners-list">
+          <div *ngFor="let partner of partners.controls; let i = index" [formGroupName]="i" class="partner-item">
+            <div class="partner-form">
+              <div class="form-group">
+                <label>Nom</label>
+                <div class="input-group">
+                  <i class="fas fa-building"></i>
+                  <input 
+                    type="text" 
+                    formControlName="name" 
+                    placeholder="Partner name"
+                    [class.error]="isPartnerFieldInvalid(i, 'name')"
+                  />
+                </div>
+                <div class="error-message" *ngIf="isPartnerFieldInvalid(i, 'name')">
+                  {{ getErrorMessage(partner.get('name'), 'Partner name') }}
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label>Site Web</label>
+                <div class="input-group">
+                  <i class="fas fa-globe"></i>
+                  <input 
+                    type="url" 
+                    formControlName="website" 
+                    placeholder="https://..."
+                    [class.error]="isPartnerFieldInvalid(i, 'website')"
+                  />
+                </div>
+                <div class="error-message" *ngIf="isPartnerFieldInvalid(i, 'website')">
+                  {{ getErrorMessage(partner.get('website'), 'Website URL') }}
+                </div>
+              </div>
+  
+              <button type="button" class="remove-button" (click)="removePartner(i)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Evaluation Criteria -->
+      <div class="form-section" formGroupName="evaluationCriteria">
+        <h3>Critère d'évaluation(%)</h3>
+        <p class="help-text">Définir des pondérations pour chaque critère (le total doit être égal à 1)</p>
+  
+        <div class="criteria-grid">
+          <div class="form-group" formGroupName="innovation">
+            <label>Innovation</label>
+            <div class="input-group">
+              <i class="fas fa-lightbulb"></i>
+              <input 
+                type="number" 
+                formControlName="weight" 
+                min="0" 
+                max="1" 
+                step="0.1"
+                [class.error]="isCriteriaInvalid('innovation')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isCriteriaInvalid('innovation')">
+              {{ getErrorMessage(hackathonForm.get('evaluationCriteria.innovation.weight'), 'Innovation weight') }}
+            </div>
+          </div>
+  
+          <div class="form-group" formGroupName="impact">
+            <label>Impact</label>
+            <div class="input-group">
+              <i class="fas fa-chart-line"></i>
+              <input 
+                type="number" 
+                formControlName="weight" 
+                min="0" 
+                max="1" 
+                step="0.1"
+                [class.error]="isCriteriaInvalid('impact')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isCriteriaInvalid('impact')">
+              {{ getErrorMessage(hackathonForm.get('evaluationCriteria.impact.weight'), 'Impact weight') }}
+            </div>
+          </div>
+  
+          <div class="form-group" formGroupName="feasibility">
+            <label>Faisabilité</label>
+            <div class="input-group">
+              <i class="fas fa-check-circle"></i>
+              <input 
+                type="number" 
+                formControlName="weight" 
+                min="0" 
+                max="1" 
+                step="0.1"
+                [class.error]="isCriteriaInvalid('feasibility')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isCriteriaInvalid('feasibility')">
+              {{ getErrorMessage(hackathonForm.get('evaluationCriteria.feasibility.weight'), 'Feasibility weight') }}
+            </div>
+          </div>
+  
+          <div class="form-group" formGroupName="presentation">
+            <label>Présentation</label>
+            <div class="input-group">
+              <i class="fas fa-presentation"></i>
+              <input 
+                type="number" 
+                formControlName="weight" 
+                min="0" 
+                max="1" 
+                step="0.1"
+                [class.error]="isCriteriaInvalid('presentation')"
+              />
+            </div>
+            <div class="error-message" *ngIf="isCriteriaInvalid('presentation')">
+              {{ getErrorMessage(hackathonForm.get('evaluationCriteria.presentation.weight'), 'Presentation weight') }}
+            </div>
+          </div>
+        </div>
+  
+        <div class="error-message" *ngIf="hackathonForm.get('evaluationCriteria')?.errors?.['weightSum']">
+            La somme de tous les poids doit être égale à 1
+                </div>
+      </div>
+  
+      <!-- Error Message -->
+      <div class="error-alert" *ngIf="error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+      </div>
+  
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="cancel-button" routerLink="/hackathons">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+        <button 
+          type="submit"
+          class="submit-button"
+          [disabled]="loading"
+          [class.loading]="loading">
+          <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+          <span>{{ isEditMode ? 'Editer' : 'Créer' }} Hackathon</span>
+        </button>
+      </div>
+    </form>
+  </div>

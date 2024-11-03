@@ -1,0 +1,137 @@
+<div class="hackathon-list">
+  <!-- Header Section -->
+  <div class="header">
+    <div class="title-section">
+      <h2>Hackathons</h2>
+      <p class="subtitle">Découvrez et rejoignez des défis d'innovation passionnants</p>
+    </div>
+    <a *ngIf="canCreateHackathon()" routerLink="create" class="create-btn">
+      <i class="fas fa-plus"></i>
+      Créer Hackathon
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Chargements hackathons...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button (click)="loadHackathons()" class="retry-button">
+      <i class="fas fa-redo"></i>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Hackathons Grid -->
+  <div *ngIf="!loading && !error" class="hackathons-grid">
+    <div *ngFor="let hackathon of hackathons" class="hackathon-card">
+      <div class="card-header">
+        <span [class]="'status-badge ' + getStatusClass(hackathon.status)">
+          {{ hackathon.status }}
+        </span>
+        <div class="card-actions">
+          <button 
+            *ngIf="hackathon.status !== 'draft'"
+            (click)="exportHackathonData(hackathon)" 
+            class="action-button"
+            title="Export Data">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+      </div>
+
+      <h3>{{ hackathon.name }}</h3>
+      <p class="description">{{ hackathon.description }}</p>
+
+      <div class="stats">
+        <div class="stat">
+          <i class="fas fa-users"></i>
+          <span>{{ hackathon.statistics.participantCount }} Participants</span>
+        </div>
+        <div class="stat">
+          <i class="fas fa-people-group"></i>
+          <span>{{ hackathon.statistics.teamCount }} Equipes</span>
+        </div>
+        <div class="stat">
+          <i class="fas fa-laptop-code"></i>
+          <span>{{ hackathon.statistics.projectCount }} Projects</span>
+        </div>
+      </div>
+
+      <div class="mentoring-stats">
+        <h4>Sessions de Mentoring</h4>
+        <div class="mentoring-grid">
+          <div class="stat">
+            <span class="label">Total</span>
+            <span class="value">{{ hackathon.statistics.mentoringSessions.total }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Programmées</span>
+            <span class="value">{{ hackathon.statistics.mentoringSessions.scheduled }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Terminées</span>
+            <span class="value">{{ hackathon.statistics.mentoringSessions.completed }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Annulées</span>
+            <span class="value">{{ hackathon.statistics.mentoringSessions.cancelled }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dates">
+        <div class="date">
+          <i class="fas fa-calendar-alt"></i>
+          <span>{{ hackathon.startDate | date:'mediumDate' }}</span>
+        </div>
+        <i class="fas fa-arrow-right"></i>
+        <div class="date">
+          <i class="fas fa-calendar-check"></i>
+          <span>{{ hackathon.endDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <a [routerLink]="[hackathon.id]" class="details-button">
+          Voir Details
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && hackathons.length === 0" class="empty-state">
+    <i class="fas fa-search"></i>
+    <h3>Aucun hackathon trouvé</h3>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && !error && hackathons.length > 0" class="pagination">
+    <button 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+      class="page-button">
+      <i class="fas fa-chevron-left"></i>
+      Précédent
+    </button>
+
+    <span class="page-info">
+      Page {{ currentPage }} de {{ totalPages }}
+    </span>
+
+    <button 
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)"
+      class="page-button">
+      Suivant
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
