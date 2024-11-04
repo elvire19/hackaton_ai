@@ -255,7 +255,7 @@ POST   /api/projects/:id/evaluate
 - Node.js 18+
 - Mysql 8.3.0
 - Angular CLI
-- Wamp (for production)
+- pm2 (for production)
 
 ### Environment Variables
 ```bash
@@ -284,7 +284,7 @@ AI_SERVICE_KEY=your_api_key
 createdb hackathon_ai
 
 # Run migrations
-npm run dev
+npm run migrate
 ```
 
 2. **Backend Deployment**
@@ -333,16 +333,9 @@ server {
 }
 ```
 
-### Monitoring & Maintenance
-- Use PM2 for process management
-- Set up logging with Winston
-- Configure monitoring with Prometheus/Grafana
-- Regular database backups
-- Automated testing pipeline
-
-### Scaling Considerations
-- Horizontal scaling with load balancer
-- Database replication
-- Caching strategy
-- Microservices architecture
-- Container orchestration with Kubernetes
+### Surveillance et maintenance
+- Utiliser PM2 pour la gestion des processus
+- Configurer la journalisation avec Winston
+- Configurer la surveillance avec Prometheus/Grafana
+- Sauvegardes régulières de la base de données
+- Pipeline de tests automatisé

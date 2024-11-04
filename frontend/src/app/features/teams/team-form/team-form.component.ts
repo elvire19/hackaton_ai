@@ -6,7 +6,7 @@ import { TeamService } from '../services/team.service';
 import { HackathonService } from '../../hackathon/services/hackathon.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Mentor, TeamMember1 } from '../models/team.model';
-import { MentorService } from '../../Mentoring/services/mentor.service';
+import { MentorService } from '../../mentoring/services/mentor.service';
 
 @Component({
   selector: 'app-team-form',
