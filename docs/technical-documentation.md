@@ -1,4 +1,67 @@
 # Documentation technique de la plateforme Hackathon AI
+## Source Code
+
+### Repository
+The source code is available on GitHub:
+
+```
+Repository URL: https://github.com/hackathon-ai-platform
+```
+
+### Branches
+- `main` - Production-ready code
+- `master` - Development branch
+
+### Clone Repository
+```bash
+git clone https://github.com/elvire19/hackaton_ai.git
+cd hackathon-ai-master
+```
+
+### Development Workflow
+1. Create feature branch:
+```bash
+git checkout -b feature/your-feature-name
+```
+
+2. Make changes and commit:
+```bash
+git add .
+git commit -m "feat: your feature description"
+```
+
+3. Push changes:
+```bash
+git push origin feature/your-feature-name
+```
+
+4. Create pull request to `develop` branch
+
+### Commit Convention
+We follow the Conventional Commits specification:
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `docs:` - Documentation changes
+- `style:` - Code style changes
+- `refactor:` - Code refactoring
+- `test:` - Adding or modifying tests
+- `chore:` - Maintenance tasks
+
+### Contributing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to your fork
+5. Create a Pull Request
+
+### CI/CD Pipeline
+The repository is configured with GitHub Actions for:
+- Automated testing
+- Code quality checks
+- Build verification
+- Deployment to staging/production
+
+For more information, visit our [GitHub repository](https://github.com/elvire19/hackaton_ai.git).
 
 ## Table des matières
 1. [Pile technologique](#technology-stack)
@@ -9,6 +72,7 @@
 6. [Documentation de l'API](#api-documentation)
 7. [Sécurité](#security)
 8. [Guide de déploiement](#deployment-guide)
+
 
 ## Pile technologique
 
