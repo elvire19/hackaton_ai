@@ -1,0 +1,187 @@
+<div class="team-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editer' : 'Créer' }} Equipe</h2>
+    <p class="subtitle">{{ isEditMode ? 'Mettez à jour les détails de votre équipe' : 'Créer une nouvelle équipe pour le hackathon' }}</p>
+  </div>
+
+  <div *ngIf="error" class="error-alert">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+  </div>
+
+  <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="form">
+    <div class="form-section">
+      <div class="form-group">
+        <label for="hackathonId">Hackathon *</label>
+        <select 
+          id="hackathonId" 
+          formControlName="hackathonId"
+          [class.error]="teamForm.get('hackathonId')?.invalid && teamForm.get('hackathonId')?.touched"
+        >
+          <option value="">Selectionner un hackathon</option>
+          <option *ngFor="let hackathon of hackathons" [value]="hackathon.id">
+            {{ hackathon.name }}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="teamForm.get('hackathonId')?.invalid && teamForm.get('hackathonId')?.touched">
+          Veuillez sélectionner un hackathon
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Nom Equipe *</label>
+        <input 
+          id="name" 
+          type="text" 
+          formControlName="name"
+          placeholder="Enter team name"
+          [class.error]="teamForm.get('name')?.invalid && teamForm.get('name')?.touched"
+        >
+        <div class="error-message" *ngIf="teamForm.get('name')?.invalid && teamForm.get('name')?.touched">
+          <span *ngIf="teamForm.get('name')?.errors?.['required']">Nom de l'équipe obligatoire</span>
+          <span *ngIf="teamForm.get('name')?.errors?.['minlength']">Le nom de l'équipe doit etre au moins 3 caractères</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea 
+          id="description" 
+          formControlName="description"
+          placeholder="Describe your team and what you're looking for"
+          rows="4"
+          [class.error]="teamForm.get('description')?.invalid && teamForm.get('description')?.touched"
+        ></textarea>
+        <div class="error-message" *ngIf="teamForm.get('description')?.invalid && teamForm.get('description')?.touched">
+          <span *ngIf="teamForm.get('description')?.errors?.['required']">Description Obligatoire</span>
+          <span *ngIf="teamForm.get('description')?.errors?.['minlength']">Description doit etre au moins 5 caractères</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Members Section -->
+    <div class="form-section">
+      <h3>Membres</h3>
+      <p class="section-description">Sélectionnez les membres de l'équipe qui rejoindront votre projet</p>
+
+      <!-- Loading State -->
+      <div *ngIf="loadingMembers" class="loading-members">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading available members...</span>
+      </div>
+
+      <div class="members-grid" *ngIf="!loadingMembers">
+        <!-- Selected Members -->
+        <div class="selected-members">
+          <h4>Membres sélectionnés ({{ selectedMembers.length }})</h4>
+          <div class="members-list">
+            <div *ngFor="let member of selectedMembers" class="member-card selected">
+              <div class="member-info">
+                <span class="name">{{ member.name }}</span>
+                <span class="email">{{ member.email }}</span>
+              </div>
+              <button type="button" class="remove-button" (click)="toggleMember(member)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div *ngIf="selectedMembers.length === 0" class="empty-state">
+              <p>Aucun Membre selectionné</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Members -->
+        <div class="available-members">
+          <h4>Membres</h4>
+          <div class="members-list">
+            <div 
+              *ngFor="let member of users" 
+              class="member-card"
+              [class.selected]="isMemberSelected(member.id)"
+              (click)="toggleMember(member)"
+            >
+              <div class="member-info">
+                <span class="name">{{ member.name }}</span>
+                <span class="email">{{ member.email }}</span>
+                
+              </div>
+              <div class="select-indicator">
+                <i class="fas" [class.fa-check-circle]="isMemberSelected(member.id)" [class.fa-plus-circle]="!isMemberSelected(member.id)"></i>
+              </div>
+            </div>
+            <div *ngIf="users.length === 0" class="empty-state">
+              <p>No available members found</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Mentors</h3>
+      <p class="section-description">Sélectionnez des mentors pour guider votre équipe</p>
+
+      <div *ngIf="loadingMentors" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading available mentors...</span>
+      </div>
+
+      <div class="members-grid" *ngIf="!loadingMentors">
+        <!-- Selected Mentors -->
+        <div class="selected-members">
+          <h4>Mentors selectionnés ({{ selectedMentors.length }})</h4>
+          <div class="members-list">
+            <div *ngFor="let mentor of selectedMentors" class="member-card selected">
+              <div class="member-info">
+                <span class="name">{{ mentor.id }}</span>
+                <span class="name">{{ mentor.expertise }}</span>
+              </div>
+              <button type="button" class="remove-button" (click)="toggleMentor(mentor)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div *ngIf="selectedMentors.length === 0" class="empty-state">
+              <p>Aucun mentor selectionné</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Mentors -->
+        <div class="available-members">
+          <h4>Mentors</h4>
+          <div class="members-list">
+            <div 
+              *ngFor="let mentor of mentors" 
+              class="member-card"
+              [class.selected]="isMentorSelected(mentor.id)"
+              (click)="toggleMentor(mentor)"
+            >
+              <div class="member-info">
+                <span class="name">{{ mentor.id }}</span>
+                <div class="expertise" *ngIf="mentor.expertise?.length">
+                  <span class="skill" *ngFor="let skill of mentor.expertise">{{ skill }}</span>
+                </div>
+                
+              </div>
+              <div class="select-indicator">
+                <i class="fas" [class.fa-check-circle]="isMentorSelected(mentor.id)" [class.fa-plus-circle]="!isMentorSelected(mentor.id)"></i>
+              </div>
+            </div>
+            <div *ngIf="mentors.length === 0" class="empty-state">
+              <p>No available mentors found</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-actions">
+      <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="submit-button" [disabled]="teamForm.invalid || loading">
+        <span *ngIf="!loading">{{ isEditMode ? 'Enregistrer' : 'Créer' }} Equipe</span>
+        <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+      </button>
+    </div>
+  </form>
+</div>

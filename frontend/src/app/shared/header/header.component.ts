@@ -12,11 +12,27 @@ import { AuthService } from '../../core/auth/auth.service';
       <div class="header-content">
         <h1>{{ title }}</h1>
         <nav *ngIf="authService.isAuthenticated()">
-          <a routerLink="/hackathons" routerLinkActive="active">Hackathons</a>
-          <a routerLink="/projects" routerLinkActive="active">Projects</a>
-          <a routerLink="/teams" routerLinkActive="active">Teams</a>
-          <a routerLink="/mentoring" routerLinkActive="active">Mentoring</a>
-          <a routerLink="/jury" routerLinkActive="active">Jury</a>
+          <a routerLink="/hackathons" routerLinkActive="active">
+            <i class="fas fa-trophy"></i>
+            Hackathons
+          </a>
+           <a routerLink="/teams" routerLinkActive="active">
+            <i class="fas fa-users"></i>
+            Teams
+          </a>
+          <a routerLink="/projects" routerLinkActive="active">
+            <i class="fas fa-laptop-code"></i>
+            Projects
+          </a>
+         
+          <a routerLink="/mentoring" routerLinkActive="active">
+            <i class="fas fa-chalkboard-teacher"></i>
+            Mentoring
+          </a>
+          <a routerLink="/jury" routerLinkActive="active" *ngIf="authService.hasRole(['admin', 'organizer', 'jury'])">
+            <i class="fas fa-gavel"></i>
+            Jury
+          </a>
         </nav>
         <div class="user-menu" *ngIf="authService.currentUser$ | async as user">
           <button class="user-button">

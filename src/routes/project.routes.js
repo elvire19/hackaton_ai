@@ -3,6 +3,11 @@ const router = express.Router();
 const projectController = require('../controllers/project.controller');
 const { authenticate, authorize } = require('../middleware/auth.middleware');
 
+// Get all projects
+router.get('/', authenticate, projectController.getAllProjects);
+
+router.get('/:id', projectController.getProject);
+
 // Get projects by hackathon
 router.get('/hackathon/:hackathonId', authenticate, projectController.getProjectsByHackathon);
 

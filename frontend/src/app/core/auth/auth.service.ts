@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { TeamMember } from '../../features/projects/models/project.model';
+import { TeamMember1 } from '../../features/teams/models/team.model';
+
 
 export interface User {
   id: number;
@@ -31,7 +34,8 @@ export interface RegisterRequest {
 export class AuthService {
   currentUserSubject = new BehaviorSubject<User | null>(null);
   private refreshTokenTimeout?: number;
-  
+  private apiUrl = `${environment.apiUrl}/auth/users`;
+
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
@@ -50,6 +54,11 @@ export class AuthService {
       this.startRefreshTokenTimer();
     }
   }
+
+
+  getUsers(): Observable<TeamMember1[]> {
+    return this.http.get<TeamMember1[]>(this.apiUrl);
+  };
 
   register(request: RegisterRequest): Observable<void> {
     return this.http.post<void>(

@@ -1,0 +1,98 @@
+<div class="project-list">
+  <!-- Header -->
+  <div class="header">
+    <div class="title-section">
+      <h2>Projects</h2>
+      <p class="subtitle">Parcourez et découvrez des projets de hackathon innovants</p>
+    </div>
+    <a *ngIf="canSubmitProject()" routerLink="new" class="submit-button">
+      <i class="fas fa-plus"></i>
+      Soumettre un Project
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Chargements</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <h3>Error Loading Projects</h3>
+    <p>{{ error }}</p>
+    <button (click)="loadProjects()" class="retry-button">
+      <i class="fas fa-redo"></i>
+      Retry
+    </button>
+  </div>
+
+  <!-- Projects Grid -->
+  <div *ngIf="!loading && !error" class="projects-grid">
+    <div *ngFor="let project of projects" class="project-card">
+      <div class="card-header">
+        <span [class]="'status-badge ' + getStatusClass(project.status)">
+          {{ project.status }}
+        </span>
+        <span *ngIf="project.aiScore" class="score">
+          <i class="fas fa-robot"></i>
+          {{ project.aiScore | number:'1.1-1' }}
+        </span>
+      </div>
+
+      <h3>{{ project.name }}</h3>
+      <p class="description">{{ project.description }}</p>
+
+      <div class="technologies">
+        <span *ngFor="let tech of project.technologies" class="tech-tag">
+          {{ tech }}
+        </span>
+      </div>
+
+    <!--    Team Members (if available) 
+      <div class="team-members" *ngIf="project.team?.users?.length">
+        <h4>Team Members</h4>
+        <div class="members-list">
+          <div *ngFor="let member of project.team.users" class="member">
+            <span class="name">{{ member.name }}</span>
+            <span class="role">({{ member.role }})</span>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="links">
+        <a *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank" class="link">
+          <i class="fab fa-github"></i>
+          Repository
+        </a>
+        <a *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank" class="link">
+          <i class="fas fa-external-link-alt"></i>
+          Demo
+        </a>
+      </div>
+
+      <div class="card-footer">
+        <a [routerLink]="['/projects', project.id]" class="details-button" disabled>
+          Details
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        <button 
+          *ngIf="canReviewProjects() && project.status === 'submitted'"
+          (click)="analyzeProject(project)"
+          class="analyze-button"
+        >
+          <i class="fas fa-robot"></i>
+          Analyze
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && projects.length === 0" class="empty-state">
+    <i class="fas fa-folder-open"></i>
+    <h3>No Projects Found</h3>
+    <p>There are no projects matching your criteria</p>
+  </div>
+</div>

@@ -1,0 +1,167 @@
+<div class="team-detail">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Loading team details...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button (click)="loadTeam(team?.id!)" class="retry-button">
+      <i class="fas fa-redo"></i>
+      Retry
+    </button>
+  </div>
+
+  <!-- Team Details -->
+  <ng-container *ngIf="!loading && !error && team">
+    <!-- Header -->
+    <div class="header">
+      <div class="title-section">
+        <h1>{{ team.name }}</h1>
+        <p class="description">{{ team.description }}</p>
+      </div>
+
+      <div class="actions">
+        <button [routerLink]="['/teams', team.id, 'edit']" class="edit-button">
+          <i class="fas fa-edit"></i>
+          Edit Team
+        </button>
+        <button (click)="onDeleteTeam()" class="delete-button">
+          <i class="fas fa-trash"></i>
+          Delete Team
+        </button>
+      </div>
+    </div>
+
+    <!-- Team Stats -->
+    <div class="stats-grid" *ngIf="analytics">
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <div class="stat-content">
+          <span class="value">{{ team.Users.length }}</span>
+          <span class="label">Membres</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <div class="stat-content">
+          <span class="value">{{ analytics.mentoringMetrics.totalSessions }}</span>
+          <span class="label">Mentoring Sessions</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-chart-line"></i>
+        <div class="stat-content">
+          <span class="value">{{ analytics.projectProgress }}%</span>
+          <span class="label">Project Progression</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-grid">
+      <!-- Team Members -->
+      <div class="info-card">
+        <h2>
+          <i class="fas fa-users"></i>
+          Membres
+        </h2>
+        <div class="members-list">
+          <div *ngFor="let member of team.Users" class="member-card">
+            <div class="member-info">
+              <h3>{{ member.name }}</h3>
+              <span class="role">{{ member.role }}</span>
+              <span class="email">{{ member.email }}</span>
+              <span class="joined">Joined {{ member.joinedAt | date }}</span>
+            </div>
+            <div class="member-stats" *ngIf="analytics?.memberContributions">
+              <div class="contribution-bar" [style.width.%]="getMemberContribution(member)"></div>
+              <span class="contribution-value">
+                {{ getMemberContribution(member) }}%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Information -->
+      <div class="info-card" *ngIf="team.Project">
+        <h2>
+          <i class="fas fa-laptop-code"></i>
+          Project
+        </h2>
+        <div class="project-info">
+          <h3>{{ team.Project.name }}</h3>
+          <p>{{ team.Project.description }}</p>
+          
+          <div class="project-links">
+            <a *ngIf="team.Project.githubUrl" [href]="team.Project.githubUrl" target="_blank" class="link">
+              <i class="fab fa-github"></i>
+              Voir Repository
+            </a>
+            <a *ngIf="team.Project.demoUrl" [href]="team.Project.demoUrl" target="_blank" class="link">
+              <i class="fas fa-external-link-alt"></i>
+              Voir Demo
+            </a>
+          </div>
+
+          <div class="technologies">
+            <span *ngFor="let tech of team.Project.technologies" class="tech-tag">
+              {{ tech }}
+            </span>
+          </div>
+
+          <div class="project-status">
+            <span class="status-badge" [class]="'status-' + team.Project.status">
+              {{ team.Project.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mentoring -->
+      <div class="info-card">
+        <h2>
+          <i class="fas fa-chalkboard-teacher"></i>
+          Mentoring
+        </h2>
+        
+        <!-- Mentors -->
+        <div class="mentors-section">
+          <h3>Mentors Assignés</h3>
+          <div class="mentors-list">
+            <div *ngFor="let mentor of team.Mentors" class="mentor-card">
+              <h4>{{ mentor.id }}</h4>
+              <h4>{{ mentor.expertise }}</h4>
+
+              <span class="assigned-date">
+                Assigné de {{ mentor.assignedAt | date }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mentoring Sessions -->
+        <div class="sessions-section">
+          <h3>Recent Sessions</h3>
+          <div class="sessions-list">
+            <div *ngFor="let session of team.MentoringSessions" class="session-card">
+              <div class="session-info">
+                <span class="date">{{ session.startTime | date:'medium' }}</span>
+                <span class="status" [class]="'status-' + session.status">
+                  {{ session.status }}
+                </span>
+              </div>
+              <p *ngIf="session.notes" class="session-notes">
+                {{ session.notes }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

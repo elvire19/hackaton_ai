@@ -13,4 +13,10 @@ export const AUTH_ROUTES: Routes = [
     component: RegisterComponent,
     title: 'Register - Hackathon AI'
   }
+  ,
+  {
+    path: 'users',
+    component: RegisterComponent,
+    title: 'Users'
+  }
 ];

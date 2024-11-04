@@ -28,10 +28,6 @@
         </div>
   
         <div class="actions">
-          <button *ngIf="canEdit()" [routerLink]="['edit']" class="edit-button">
-            <i class="fas fa-edit"></i>
-            Modifier
-          </button>
           <button *ngIf="hackathon.status !== 'draft'" (click)="exportData()" class="export-button">
             <i class="fas fa-download"></i>
             Exporter les données (csv)
@@ -75,7 +71,7 @@
       <div class="content-grid">
         <!-- Date & Team Info -->
         <div class="info-card">
-          <h2>Informations su l'évenement</h2>
+          <h2>Informations sur l'évenement</h2>
           <div class="info-content">
             <div class="info-item">
               <i class="fas fa-calendar-alt"></i>

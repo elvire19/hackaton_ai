@@ -1,0 +1,388 @@
+.team-detail {
+  padding: 2rem;
+
+  .loading-state, .error-state {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+
+    i {
+      font-size: 2rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--text-light);
+      margin: 1rem 0;
+    }
+
+    .retry-button {
+      background: none;
+      border: 2px solid #e0e0e0;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+
+      &:hover {
+        border-color: var(--text);
+        transform: translateY(-1px);
+      }
+
+      i {
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        color: inherit;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .title-section {
+      flex: 1;
+      min-width: 300px;
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+
+      .description {
+        color: var(--text-light);
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+
+        i {
+          font-size: 1rem;
+        }
+      }
+
+      .edit-button {
+        background: var(--primary);
+        color: white;
+        border: none;
+
+        &:hover {
+          background: var(--primary-dark);
+          transform: translateY(-2px);
+        }
+      }
+
+      .delete-button {
+        background: white;
+        color: #ef4444;
+        border: 2px solid #ef4444;
+
+        &:hover {
+          background: #ef4444;
+          color: white;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      i {
+        font-size: 1.5rem;
+        color: var(--primary);
+        background: rgba(52, 152, 219, 0.1);
+        padding: 1rem;
+        border-radius: 12px;
+      }
+
+      .stat-content {
+        .value {
+          display: block;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text);
+        }
+
+        .label {
+          color: var(--text-light);
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .info-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          color: var(--primary);
+        }
+      }
+
+      .members-list {
+        .member-card {
+          padding: 1rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+
+          .member-info {
+            h3 {
+              font-size: 1rem;
+              font-weight: 600;
+              margin-bottom: 0.25rem;
+            }
+
+            .role, .email, .joined {
+              display: block;
+              font-size: 0.875rem;
+              color: var(--text-light);
+              margin-bottom: 0.25rem;
+            }
+          }
+
+          .member-stats {
+            margin-top: 0.5rem;
+            
+            .contribution-bar {
+              height: 4px;
+              background: var(--primary);
+              border-radius: 2px;
+              margin-bottom: 0.25rem;
+            }
+
+            .contribution-value {
+              font-size: 0.875rem;
+              color: var(--primary);
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      .project-info {
+        h3 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin-bottom: 0.75rem;
+        }
+
+        p {
+          color: var(--text-light);
+          margin-bottom: 1rem;
+        }
+
+        .project-links {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+
+          .link {
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .technologies {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+
+          .tech-tag {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+          }
+        }
+
+        .status-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: 999px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          text-transform: capitalize;
+        }
+
+        .status-draft {
+          background: #f3f4f6;
+          color: #6b7280;
+        }
+
+        .status-submitted {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        .status-evaluated {
+          background: #dcfce7;
+          color: #166534;
+        }
+      }
+
+      .mentors-section, .sessions-section {
+        margin-bottom: 2rem;
+
+        h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+        }
+      }
+
+      .mentors-list {
+        .mentor-card {
+          padding: 1rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+
+          h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+          }
+
+          .expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+
+            .skill-tag {
+              background: rgba(52, 152, 219, 0.1);
+              color: var(--primary);
+              padding: 0.25rem 0.75rem;
+              border-radius: 999px;
+              font-size: 0.75rem;
+              font-weight: 500;
+            }
+          }
+
+          .assigned-date {
+            font-size: 0.875rem;
+            color: var(--text-light);
+          }
+        }
+      }
+
+      .sessions-list {
+        .session-card {
+          padding: 1rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+
+          .session-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+
+            .date, .duration {
+              font-size: 0.875rem;
+              color: var(--text);
+            }
+
+            .status {
+              padding: 0.25rem 0.75rem;
+              border-radius: 999px;
+              font-size: 0.75rem;
+              font-weight: 500;
+            }
+
+            .status-scheduled {
+              background: #dbeafe;
+              color: #1e40af;
+            }
+
+            .status-completed {
+              background: #dcfce7;
+              color: #166534;
+            }
+
+            .status-cancelled {
+              background: #fee2e2;
+              color: #991b1b;
+            }
+          }
+
+          .session-notes {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

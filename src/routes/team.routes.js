@@ -1,21 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const teamController = require('../controllers/team.controller');
 const { authenticate, authorize } = require('../middleware/auth.middleware');
+const teamController = require('../controllers/team.controller');
 
-// Public routes
-router.get('/', teamController.getAllTeams);
-router.get('/:id', teamController.getTeamById);
+// Public routes (still require authentication)
+router.get('/', authenticate, teamController.getAllTeams);
+router.get('/:id', authenticate, teamController.getTeam);
 
-// Protected routes
-router.post('/', authenticate, authorize('organizer'), teamController.createTeam);
-router.put('/:id', authenticate, authorize('organizer'), teamController.updateTeam);
+// Team CRUD operations
+router.post('/', 
+  authenticate, 
+  authorize('participant','mentor','organizer'), 
+  teamController.createTeam
+);
 
-// Team member management
-router.post('/:teamId/users/:userId', authenticate, teamController.addUserToTeam);
-router.delete('/:teamId/users/:userId', authenticate, teamController.removeUserFromTeam);
+router.put('/:id', 
+  authenticate, 
+  teamController.updateTeam
+);
 
-// Team recommendations
-router.get('/recommend/:hackathonId/:teamSize', authenticate, authorize('organizer'), teamController.recommendTeams);
+router.delete('/:id', 
+  authenticate, 
+  teamController.deleteTeam
+);
+
+router.get('/:id/analytics', authenticate, teamController.getTeamAnalytics);
+
 
 module.exports = router;

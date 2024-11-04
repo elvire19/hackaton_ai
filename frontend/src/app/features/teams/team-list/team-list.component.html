@@ -1,0 +1,109 @@
+<div class="team-list">
+  <!-- Header -->
+  <div class="header">
+    <div class="title-section">
+      <h2>Teams</h2>
+      <p class="subtitle">Trouvez ou créez votre équipe de hackathon idéale</p>
+    </div>
+    <div class="header-actions">
+      <a *ngIf="canCreateTeam()" routerLink="create" class="create-button">
+        <i class="fas fa-plus"></i>
+        Créer une Equipe
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Loading teams...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button (click)="loadTeams()" class="retry-button">
+      <i class="fas fa-redo"></i>
+      Retry
+    </button>
+  </div>
+
+  <!-- Teams Grid -->
+  <div *ngIf="!loading && !error" class="teams-grid">
+    <div *ngFor="let team of teams" class="team-card">
+      <div class="card-header">
+        <h3>{{ team.name }}</h3>
+        <span class="member-count">
+          <i class="fas fa-users"></i>
+          {{ team.Users.length || 0 }} members
+        </span>
+      </div>
+
+      <p class="description">{{ team.description }}</p>
+
+      <!-- Project Info -->
+      <div *ngIf="team.Project" class="project-info">
+        <h4>
+          <i class="fas fa-laptop-code"></i>
+          Project
+        </h4>
+        <p>{{ team.Project.name }}</p>
+        <div class="project-links">
+          <a *ngIf="team.Project.githubUrl" [href]="team.Project.githubUrl" target="_blank">
+            <i class="fab fa-github"></i>
+            Repository
+          </a>
+          <a *ngIf="team.Project.demoUrl" [href]="team.Project.demoUrl" target="_blank">
+            <i class="fas fa-external-link-alt"></i>
+            Demo
+          </a>
+        </div>
+      </div>
+
+      <!-- Team Members -->
+      <div class="members" *ngIf="team.Users?.length">
+        <h4>
+          <i class="fas fa-user-friends"></i>
+          Membres
+        </h4>
+        <div class="members-list">
+          <div *ngFor="let member of team.Users" class="member">
+            <div class="member-info">
+              <span class="name">{{ member.name }}</span>
+              <span class="role">{{ member.role }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mentors -->
+      <div *ngIf="team.Mentors?.length" class="mentors">
+        <h4>
+          <i class="fas fa-chalkboard-teacher"></i>
+          Mentors
+        </h4>
+        <div class="mentors-list">
+          <div *ngFor="let mentor of team.Mentors" class="mentor">
+            <span class="name">{{ mentor.id }}</span>
+            <span class="expertise">{{ mentor.expertise }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <a [routerLink]="[team.id]" class="details-button">
+          Details
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && teams.length === 0" class="empty-state">
+    <i class="fas fa-users"></i>
+    <h3>No Teams Found</h3>
+    <p>Commencez par créer une nouvelle équipe ou en rejoindre une existante</p>
+  </div>
+</div>
